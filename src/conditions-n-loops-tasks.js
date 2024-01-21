@@ -362,25 +362,18 @@ function getSpiralMatrix(size) {
  *  ]                 ]
  */
 function rotateMatrix(matrix) {
-  const n = matrix.length;
-
-  for (let layer = 0; layer < n / 2; layer += 1) {
-    const first = layer;
-    const last = n - 1 - layer;
-    for (let i = first; i < last; i += 1) {
-      const offset = i - first;
-      const top = matrix[first][i];
-      // eslint-disable-next-line no-param-reassign
-      matrix[first][i] = matrix[last - offset][first];
-      // eslint-disable-next-line no-param-reassign
-      matrix[last - offset][first] = matrix[last][last - offset];
-      // eslint-disable-next-line no-param-reassign
-      matrix[last][last - offset] = matrix[i][last];
-      // eslint-disable-next-line no-param-reassign
-      matrix[i][last] = top;
+  const matrix2 = matrix;
+  const rowCount = matrix.length;
+  for (let i = 0; i < Math.floor(rowCount / 2); i += 1) {
+    for (let j = i; j < rowCount - i - 1; j += 1) {
+      const tmp = matrix2[i][j];
+      matrix2[i][j] = matrix[rowCount - j - 1][i];
+      matrix2[rowCount - j - 1][i] = matrix[rowCount - i - 1][rowCount - j - 1];
+      matrix2[rowCount - i - 1][rowCount - j - 1] = matrix[j][rowCount - i - 1];
+      matrix2[j][rowCount - i - 1] = tmp;
     }
   }
-  return matrix;
+  return matrix2;
 }
 
 /**
@@ -397,57 +390,31 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(arr) {
-  if (arr.length <= 1) {
-    return arr;
-  }
+function quickSort(arr) {
+  if (arr.length < 2) return arr;
 
-  let blockSize = 1;
-  const tempArray = new Array(arr.length);
-
-  while (blockSize < arr.length) {
-    let start = 0;
-    while (start < arr.length) {
-      let mid = start + blockSize;
-      let end = mid + blockSize;
-      if (end > arr.length) end = arr.length;
-      if (mid > arr.length) mid = arr.length;
-
-      let leftIndex = start;
-      let rightIndex = mid;
-      let tempIndex = start;
-      while (leftIndex < mid && rightIndex < end) {
-        if (arr[leftIndex] <= arr[rightIndex]) {
-          // eslint-disable-next-line no-plusplus
-          tempArray[tempIndex++] = arr[leftIndex++];
-        } else {
-          // eslint-disable-next-line no-plusplus
-          tempArray[tempIndex++] = arr[rightIndex++];
-        }
-      }
-
-      while (leftIndex < mid) {
-        // eslint-disable-next-line no-plusplus
-        tempArray[tempIndex++] = arr[leftIndex++];
-      }
-
-      while (rightIndex < end) {
-        // eslint-disable-next-line no-plusplus
-        tempArray[tempIndex++] = arr[rightIndex++];
-      }
-      // eslint-disable-next-line no-plusplus
-      for (let i = start; i < end; i++) {
-        // eslint-disable-next-line no-param-reassign
-        arr[i] = tempArray[i];
-      }
-
-      start += 2 * blockSize;
+  const pivot = arr[arr.length - 1];
+  const leftArr = [];
+  const rightArr = [];
+  let leftIndex = -1;
+  let rightIndex = -1;
+  for (let i = 0; i < arr.length - 1; i += 1) {
+    if (arr[i] < pivot) {
+      leftArr[(leftIndex += 1)] = arr[i];
+    } else {
+      rightArr[(rightIndex += 1)] = arr[i];
     }
-
-    blockSize *= 2;
   }
+  return [...quickSort(leftArr), pivot, ...quickSort(rightArr)];
+}
 
-  return arr;
+function sortByAsc(arr) {
+  const arr2 = arr;
+  const sortedArr = quickSort(arr);
+  for (let i = 0; i < sortedArr.length; i += 1) {
+    arr2[i] = sortedArr[i];
+  }
+  return arr2;
 }
 
 /**
@@ -468,29 +435,22 @@ function sortByAsc(arr) {
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
 function shuffleChar(str, iterations) {
-  let result = '';
-  const { length } = str;
-
-  for (let i = 0; i < length; i += 1) {
-    // eslint-disable-next-line no-use-before-define
-    const newPos = calculateNewPosition(i, length, iterations);
-    result += str.charAt(newPos);
+  if (str.length < 2 || iterations < 1) {
+    return str;
   }
-
-  return result;
-}
-
-function calculateNewPosition(index, length, iterations) {
-  for (let i = 0; i < iterations; i += 1) {
-    if (index < length / 2) {
-      // eslint-disable-next-line no-param-reassign
-      index *= 2;
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      index = 2 * (index - Math.ceil(length / 2)) + 1;
+  let str2 = str;
+  for (let i = 1; i <= iterations; i += 1) {
+    let oddPart = '';
+    let evenPart = '';
+    for (let j = 0; j < str.length; j += 1) {
+      const isEven = j % 2 === 0;
+      if (isEven) evenPart += str2[j];
+      else oddPart += str2[j];
     }
+    str2 = evenPart + oddPart;
+    if (str2 === str) return shuffleChar(str, iterations % i);
   }
-  return index % length;
+  return str2;
 }
 
 /**

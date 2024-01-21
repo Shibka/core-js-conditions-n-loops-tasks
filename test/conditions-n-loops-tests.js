@@ -444,6 +444,11 @@ describe('core-js-conditions-n-loops', () => {
         assert.deepEqual(arr, result);
       }
       assert.equal(
+        forbidden.isCommented(tasks.getSpiralMatrix),
+        false,
+        `Be sure to remove comments from the final solution`
+      );
+      assert.equal(
         forbidden.isArrayUsed(tasks.rotateMatrix),
         false,
         `Using methods of Array class is not allowed`
@@ -472,6 +477,11 @@ describe('core-js-conditions-n-loops', () => {
       tasks.sortByAsc(sourceArray);
       assert.deepEqual(sourceArray, sortedArr);
     }
+    assert.equal(
+      forbidden.isCommented(tasks.getSpiralMatrix),
+      false,
+      `Be sure to remove comments from the final solution`
+    );
     assert.equal(
       forbidden.isArrayUsed(tasks.sortByAsc),
       false,
