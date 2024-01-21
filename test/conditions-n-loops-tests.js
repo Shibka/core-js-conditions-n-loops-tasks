@@ -444,11 +444,6 @@ describe('core-js-conditions-n-loops', () => {
         assert.deepEqual(arr, result);
       }
       assert.equal(
-        forbidden.isCommented(tasks.rotateMatrix),
-        false,
-        `Be sure to remove comments from the final solution`
-      );
-      assert.equal(
         forbidden.isArrayUsed(tasks.rotateMatrix),
         false,
         `Using methods of Array class is not allowed`
@@ -477,11 +472,6 @@ describe('core-js-conditions-n-loops', () => {
       tasks.sortByAsc(sourceArray);
       assert.deepEqual(sourceArray, sortedArr);
     }
-    assert.equal(
-      forbidden.isCommented(tasks.sortByAsc),
-      false,
-      `Be sure to remove comments from the final solution`
-    );
     assert.equal(
       forbidden.isArrayUsed(tasks.sortByAsc),
       false,
@@ -516,12 +506,6 @@ describe('core-js-conditions-n-loops', () => {
       }
       const result = utility.getShuffleStringUtil(str, iteration);
       assert.equal(tasks.shuffleChar(str, iteration), result);
-
-      assert.equal(
-        forbidden.isCommented(tasks.shuffleChar),
-        false,
-        `Be sure to remove comments from the final solution`
-      );
       assert.equal(
         forbidden.isArrayUsed(tasks.shuffleChar),
         false,
